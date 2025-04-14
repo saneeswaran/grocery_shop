@@ -1,0 +1,17 @@
+
+
+model -- > name , quanitity , price ,discount 
+
+user login --> gmail, password
+register --> username , email , password, age ,
+
+routes = path
+
+controller -- main function
+
+middleware --> function running --> another function --> result
+
+config
+
+sundalman@gmail.com
+sundal man@gmail.com
