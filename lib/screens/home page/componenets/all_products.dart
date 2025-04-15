@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_shop/constants/constants.dart';
 import 'package:grocery_shop/provider/product_provider.dart';
+import 'package:grocery_shop/widgets/custom_snack_bar.dart';
 import 'package:provider/provider.dart';
 
 class AllProducts extends StatelessWidget {
@@ -71,8 +72,13 @@ class AllProducts extends StatelessWidget {
                   icon: Icons.shopping_cart,
                   color: isInCart ? mainColor : Colors.grey,
                   onTap: () {
-                    if (isInCart) return;
-                    provider.addProductToCart(product);
+                    if (!isInCart) {
+                      provider.addProductToCart(product);
+                      successSnackBar("product added to cart", context);
+                    } else {
+                      provider.removeProductFromCart(product.id);
+                      failedSnackBar("removed from cart", context);
+                    }
                   },
                 );
               },
@@ -108,13 +114,18 @@ class AllProducts extends StatelessWidget {
         //like button
         Consumer<ProductProvider>(
           builder: (context, provider, child) {
-            bool isFavCheck = provider.isFavCheck(products.id);
+            final isFavCheck = provider.isFavCheck(products.id);
             return _customContainer(
               icon: isFavCheck ? Icons.favorite : Icons.favorite_border,
               color: isFavCheck ? mainColor : Colors.grey,
               onTap: () {
-                if (isFavCheck) return;
-                provider.addToFavorite(products);
+                if (isFavCheck) {
+                  provider.removeFromFavorite(products.id);
+                  failedSnackBar("Product removed successfully", context);
+                } else {
+                  provider.addToFavorite(products);
+                  successSnackBar("Product added Successfully", context);
+                }
               },
             );
           },
@@ -136,7 +147,10 @@ class AllProducts extends StatelessWidget {
         color: Colors.white,
         border: Border.all(color: Colors.grey.shade400),
       ),
-      child: Icon(icon, color: color, size: 20),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Icon(icon, color: color, size: 20),
+      ),
     );
   }
 

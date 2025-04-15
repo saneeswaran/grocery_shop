@@ -6,7 +6,7 @@ class Product {
   final String subCategory;
   final double price;
   final double? discount; // optional
-  final int stock;
+  int stock = 1;
   final String imageUrl;
   final List<String> gallery; // additional images
   final double rating;
@@ -34,6 +34,44 @@ class Product {
     required this.updatedAt,
     required this.offerPrice,
   });
+
+  Product copyWith({
+    int? id,
+    String? name,
+    String? description,
+    String? category,
+    String? subCategory,
+    double? price,
+    double? discount,
+    int? stock = 1,
+    String? imageUrl,
+    List<String>? gallery,
+    double? rating,
+    bool? isFavorite,
+    bool? isFeatured,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    int? offerPrice,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      category: category ?? this.category,
+      subCategory: subCategory ?? this.subCategory,
+      price: price ?? this.price,
+      discount: discount ?? this.discount,
+      stock: stock ?? this.stock,
+      imageUrl: imageUrl ?? this.imageUrl,
+      gallery: gallery ?? this.gallery,
+      rating: rating ?? this.rating,
+      isFavorite: isFavorite ?? this.isFavorite,
+      isFeatured: isFeatured ?? this.isFeatured,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      offerPrice: offerPrice ?? this.offerPrice,
+    );
+  }
 
   // From JSON
   factory Product.fromJson(Map<String, dynamic> json) {

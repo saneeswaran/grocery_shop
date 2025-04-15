@@ -200,7 +200,7 @@ class HomePage extends StatelessWidget {
         scrollDirection: Axis.horizontal,
 
         itemBuilder: (context, index) {
-          return ProductContainer();
+          return ProductContainer(index: index);
         },
       ),
     );
