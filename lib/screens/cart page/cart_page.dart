@@ -91,6 +91,7 @@ class CartPage extends StatelessWidget {
                 height: size.height * 0.12,
                 width: size.width * 0.25,
                 decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
                   image: DecorationImage(
                     image: CachedNetworkImageProvider(cart.imageUrl),
                     fit: BoxFit.fill,
@@ -100,39 +101,43 @@ class CartPage extends StatelessWidget {
               ),
             ),
             //product details
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: size.height * 0.01,
-              children: [
-                Text(
-                  cart.name,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "${cart.discount}",
-                  style: TextStyle(fontSize: 16, color: Colors.grey.shade500),
-                ),
-                Row(
-                  spacing: size.width * 0.01,
-                  children: [
-                    Text(
-                      "unit price: ${cart.price}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey.shade500,
+            SizedBox(
+              height: size.height * 0.19,
+              width: size.width * 0.41,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: size.height * 0.01,
+                children: [
+                  Text(
+                    cart.name,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "${cart.discount}",
+                    style: TextStyle(fontSize: 16, color: Colors.grey.shade500),
+                  ),
+                  Row(
+                    spacing: size.width * 0.01,
+                    children: [
+                      Text(
+                        "unit price: ${cart.price}",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey.shade500,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "${cart.offerPrice.toInt()}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                      Text(
+                        "${cart.offerPrice.toInt()}",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                _customRichText(price: provider.specificProduct.toInt()),
-              ],
+                    ],
+                  ),
+                  _customRichText(price: provider.specificProduct.toInt()),
+                ],
+              ),
             ),
             Consumer<ProductProvider>(
               builder: (context, provider, child) {
@@ -190,7 +195,7 @@ class CartPage extends StatelessWidget {
             onPressed: increment,
             icon: Icon(Icons.add, color: mainColor),
           ),
-          Text("$quantity"),
+          Text("$quantity", style: TextStyle(color: mainColor)),
           IconButton(
             onPressed: decrement,
             icon: Icon(Icons.remove, color: mainColor),
