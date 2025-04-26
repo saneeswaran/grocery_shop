@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_shop/constants/constants.dart';
+import 'package:grocery_shop/provider/cart_provider.dart';
+import 'package:grocery_shop/provider/favorite_provider.dart';
 import 'package:grocery_shop/provider/product_provider.dart';
+import 'package:grocery_shop/screens/favorite/favorite_page.dart';
 import 'package:grocery_shop/widgets/custom_snack_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +14,7 @@ class AllProducts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ProductProvider>(context);
-    final items = provider.products;
+    final items = provider.product;
     Size size = MediaQuery.of(context).size;
     return GridView.builder(
       itemCount: items.length,
@@ -44,7 +47,7 @@ class AllProducts extends StatelessWidget {
     required ProductProvider provider,
     required int index,
   }) {
-    final product = provider.products[index];
+    final product = provider.product[index];
     return Container(
       padding: const EdgeInsets.all(5),
       height: size.height * 0.25,
@@ -52,7 +55,9 @@ class AllProducts extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         image: DecorationImage(
-          image: CachedNetworkImageProvider(product.imageUrl),
+          image: CachedNetworkImageProvider(
+            product.imageUrls[index],
+          ), //maybe error cause
           fit: BoxFit.fill,
         ),
       ),
@@ -63,20 +68,31 @@ class AllProducts extends StatelessWidget {
           _offerAndLike(index: index, provider: provider),
           Align(
             alignment: Alignment.topRight,
-            child: Consumer<ProductProvider>(
+            child: Consumer<CartProvider>(
               builder: (context, provider, child) {
-                final isInCart = provider.cartproducts.any(
-                  (element) => element.id == product.id,
-                );
+                final cart = provider.cart;
+                final bool isInCart = cart.any((item) => item.id == product.id);
                 return _customContainer(
                   icon: Icons.shopping_cart,
                   color: isInCart ? mainColor : Colors.grey,
                   onTap: () {
+                    //must watch
                     if (!isInCart) {
-                      provider.addProductToCart(product);
+                      provider.addToCart(
+                        context: context,
+                        product: product,
+                        productId: product.id.toString(),
+                        userId: '',
+                        quantity: product.quantity,
+                      );
                       successSnackBar("product added to cart", context);
                     } else {
-                      provider.removeProductFromCart(product.id);
+                      provider.deleteFromCart(
+                        context: context,
+                        product: product,
+                        userId: '',
+                        productId: product.id.toString(),
+                      );
                       failedSnackBar("removed from cart", context);
                     }
                   },
@@ -90,7 +106,7 @@ class AllProducts extends StatelessWidget {
   }
 
   Row _offerAndLike({required ProductProvider provider, required int index}) {
-    final products = provider.products[index];
+    final products = provider.product[index];
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -104,26 +120,38 @@ class AllProducts extends StatelessWidget {
               bottomLeft: Radius.circular(12),
             ),
           ),
-          child: Center(
-            child: Text(
-              products.discount.toString(),
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
+          // child: Center(
+          //   child: Text(
+          //     products.discount.toString(),
+          //     style: TextStyle(color: Colors.white),
+          //   ),
+          // ),
         ),
         //like button
-        Consumer<ProductProvider>(
+        Consumer<FavoriteProvider>(
           builder: (context, provider, child) {
-            final isFavCheck = provider.isFavCheck(products.id);
+            final favorite = provider.favoriteProduct;
+            final bool isFavCheck = favorite.any(
+              (item) => item.id == products.id,
+            );
+            //must watch
             return _customContainer(
               icon: isFavCheck ? Icons.favorite : Icons.favorite_border,
               color: isFavCheck ? mainColor : Colors.grey,
               onTap: () {
                 if (isFavCheck) {
-                  provider.removeFromFavorite(products.id);
+                  provider.removeFromFavoruteInDatabase(
+                    context: context,
+                    id: products.id.toString(),
+                  );
                   failedSnackBar("Product removed successfully", context);
                 } else {
-                  provider.addToFavorite(products);
+                  provider.addToFavoriteInDatabase(
+                    context: context,
+                    product: products,
+                    productId: products.id.toString(),
+                    userId: '',
+                  );
                   successSnackBar("Product added Successfully", context);
                 }
               },
@@ -159,7 +187,7 @@ class AllProducts extends StatelessWidget {
     required ProductProvider provider,
     required int index,
   }) {
-    final product = provider.products[index];
+    final product = provider.product[index];
     return Column(
       spacing: size.height * 0.01,
       children: [
@@ -177,10 +205,7 @@ class AllProducts extends StatelessWidget {
         SizedBox(height: size.height * 0.01),
         Text(product.name, style: TextStyle(fontWeight: FontWeight.bold)),
         SizedBox(height: size.height * 0.01),
-        Text(
-          product.stock.toString(),
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        Text("product.stock", style: TextStyle(fontWeight: FontWeight.bold)),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -192,10 +217,10 @@ class AllProducts extends StatelessWidget {
                 color: Colors.grey.shade400,
               ),
             ),
-            Text(
-              product.offerPrice.toString(),
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+            // Text(
+            //   product.offerPrice.toString(),
+            //   style: TextStyle(fontWeight: FontWeight.bold),
+            // ),
           ],
         ),
       ],

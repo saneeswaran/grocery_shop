@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
-import 'package:grocery_shop/provider/product_provider.dart';
+import 'package:grocery_shop/provider/cart_provider.dart';
 import 'package:grocery_shop/routes/route_model.dart';
 import 'package:grocery_shop/screens/cart%20page/cart_page.dart';
 import 'package:page_transition/page_transition.dart';
@@ -75,9 +75,9 @@ class DrawerPage extends StatelessWidget {
               onPressed: () {},
               icon: Icon(Icons.search, color: Theme.of(context).primaryColor),
             ),
-            Consumer<ProductProvider>(
+            Consumer<CartProvider>(
               builder: (context, provider, child) {
-                final cartCount = provider.cartproducts.length;
+                final cartCount = provider.cart.length;
                 return Badge.count(
                   count: cartCount,
                   backgroundColor: Theme.of(context).primaryColor,
@@ -91,7 +91,6 @@ class DrawerPage extends StatelessWidget {
                           child: CartPage(),
                         ),
                       );
-                      ;
                     },
                     child: Icon(Icons.shopping_cart, color: Colors.grey),
                   ),

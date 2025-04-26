@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 
 exports.registerUser = async (req, res) => {
-    const { username, email, password, } = req.body;
+    const { username, email, password,type } = req.body;
 
     try {
         // Check if user already exists
@@ -13,7 +13,7 @@ exports.registerUser = async (req, res) => {
                 message: "User already exists. Please log in." 
             });
         }
-        if(!username || !email || !password) return res.status(400).json({ message: "All fields are required" });
+        if(!username || !email || !password || !type) return res.status(400).json({ message: "All fields are required" });
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -23,6 +23,7 @@ exports.registerUser = async (req, res) => {
             username,
             email,
             password: hashedPassword,
+            type
         });
 
         // Respond with user data (excluding password)
@@ -71,5 +72,24 @@ exports.loginUser = async (req, res) => {
             success:false,
             error: error.message
         });
+    }
+}
+exports.fetchAllUser = async (req, res) => { 
+    try {
+        const allUsers = await User.find();
+        res.status(200).json(allUsers);
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+}
+
+exports.deleteUser = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const userExists = await User.findByIdAndDelete(id);
+        if (!userExists) return res.status(400).json({ message: "User not found" });
+        res.status(200).json({ message: "User deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 }

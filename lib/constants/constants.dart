@@ -32,6 +32,25 @@ const String registerRoute = "$mainUrl/user/register";
 const String productsRoute = "$mainUrl/products";
 const String verifyTokenRoute = "$mainUrl/user/verify-token";
 
+//products
+const String getAllProductRoute = '$mainUrl/product/get-all-products';
+//category routes
+const String getAllCategoryRoute = '$mainUrl/category/get-all-categories';
+
+//subcategory routes
+const String getAllSubCategoryRoute = '$mainUrl/subcategory/getAllSubcategory';
+
+//favorite
+const String addToFavouriteInDatabaseRoute =
+    '$mainUrl/favorite/add-to-favorite';
+const String deleteFromFavouritesRoute =
+    '$mainUrl/favorite/delete-from-favorite';
+const String fetchFavoriteProductRoute = '$mainUrl/favorite/get-favorite';
+
+//cart
+const String getCartProductRoute = '$mainUrl/cart/get-cart-product';
+const String addToCartRoute = '$mainUrl/cart/add-to-cart';
+const String deleteFromCartRoute = '$mainUrl/cart/delete-from-cart';
 //header
 Map<String, String> headers = {
   'Content-Type': 'application/json; charset=UTF-8',

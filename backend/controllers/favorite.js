@@ -1,9 +1,12 @@
 const Favorite = require("../model/favorite");
 
-exports.addTOFavorite = async (req, res) => {
+exports.addToFavorite = async (req, res) => {
     const { userId, productId } = req.body;
 
     try {
+        if (!userId || !productId) {
+    return res.status(400).json({ message: "userId and productId are required" });
+}
         //checking the product exists or not
         const productExists = await Favorite.findOne({ userId, productId });
         if (productExists) return res.status(409).json({ message: "Product already added to favorite" });
@@ -19,7 +22,7 @@ exports.addTOFavorite = async (req, res) => {
 }
 
 exports.getFavorite = async (req, res) => {
-    const userId = req.params.userId;
+    const userId = req.params.id;
 
     try {
         const favoriteProduct = await Favorite.find({ userId });
@@ -33,6 +36,7 @@ exports.deleteFromFavorites = async (req, res) => {
     const { userId, productId } = req.body;
     
     try {
+        if (!userId || !productId) return res.status(400).json({ message: "userId and productId are required" });
         const removeFavorite = await Favorite.findOneAndDelete({ userId, productId });
 
         if (!removeFavorite) return res.status(404).json({ message: "Product not found" });

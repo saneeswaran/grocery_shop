@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_shop/constants/constants.dart';
+import 'package:grocery_shop/provider/favorite_provider.dart';
 import 'package:grocery_shop/provider/product_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -96,9 +97,15 @@ class ProductContainer extends StatelessWidget {
           ),
           Consumer<ProductProvider>(
             builder: (context, provider, child) {
-              final product = provider.products;
-              final favorites = provider.favoriteProducts;
-              final isFavCheck = provider.isFavCheck(product[index].id);
+              final favoriteProvider = Provider.of<FavoriteProvider>(
+                context,
+                listen: false,
+              );
+              final product = provider.product;
+              final favorites = favoriteProvider.favoriteProduct;
+              final bool isFavCheck = favorites.any(
+                (item) => item.id == product[index].id,
+              );
               return _customContainer(
                 icon: isFavCheck ? Icons.favorite : Icons.favorite_border,
                 color: isFavCheck ? Colors.red : mainColor,
@@ -106,7 +113,10 @@ class ProductContainer extends StatelessWidget {
                   if (!isFavCheck) {
                     favorites.add(product[index]);
                   } else {
-                    provider.removeFromFavorite(product[index].id);
+                    favoriteProvider.removeFromFavoruteInDatabase(
+                      id: product[index].id.toString(),
+                      context: context,
+                    );
                   }
                 },
               );

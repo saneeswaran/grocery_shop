@@ -81,33 +81,33 @@ class HomePage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _popularContainer(size: size, text: "Vegetables", onTap: () {}),
-              _popularContainer(size: size, text: "Fruits", onTap: () {}),
-              _popularContainer(size: size, text: "Bakery", onTap: () {}),
-              _popularContainer(size: size, text: "Dairy", onTap: () {}),
+              //   _popularContainer(size: size, text: "Vegetables", onTap: () {}),
+              // _popularContainer(size: size, text: "Fruits", onTap: () {}),
+              //_popularContainer(size: size, text: "Bakery", onTap: () {}),
+              // _popularContainer(size: size, text: "Dairy", onTap: () {}),
             ],
           ),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _popularContainer(size: size, text: "Meat", onTap: () {}),
-              _popularContainer(size: size, text: "Snacks", onTap: () {}),
-              _popularContainer(size: size, text: "Beverages", onTap: () {}),
-              _popularContainer(
-                size: size,
-                text: "View All",
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      type: PageTransitionType.fade,
-                      duration: const Duration(milliseconds: 500),
-                      child: DrawerPage(body: AllCategory()),
-                    ),
-                  );
-                },
-              ),
+              // _popularContainer(size: size, text: "Meat", onTap: () {}),
+              // _popularContainer(size: size, text: "Snacks", onTap: () {}),
+              // _popularContainer(size: size, text: "Beverages", onTap: () {}),
+              // _popularContainer(
+              //  size: size,
+              //   text: "View All",
+              //   onTap: () {
+              //     Navigator.push(
+              //       context,
+              //       PageTransition(
+              //         type: PageTransitionType.fade,
+              //         duration: const Duration(milliseconds: 500),
+              //         child: DrawerPage(body: AllCategory()),
+              //       ),
+              //     );
+              //   },
+              // ),
             ],
           ),
         ],
@@ -115,61 +115,43 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _popularContainer({
-    required Size size,
-    required VoidCallback onTap,
-    required String text,
-  }) {
-    final List<Product> categories = sampleProducts;
-    final List<String> value = [];
-    final category = categories.firstWhere(
-      (element) => element.name == text,
-      orElse:
-          () => Product(
-            name: text,
-            imageUrl: "",
-            category: "",
-            createdAt: DateTime.now(),
-            description: "",
-            id: 0,
-            offerPrice: 0,
-            price: 0,
-            subCategory: "",
-            updatedAt: DateTime.now(),
-            gallery: value,
-            discount: 0.0,
-            isFavorite: false,
-            isFeatured: false,
-
-            rating: 0.0,
-            stock: 0,
-          ), // Fallback value
-    );
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            height: size.height * 0.10,
-            width: size.width * 0.20,
-            decoration: BoxDecoration(
-              color: Colors.pink,
-              borderRadius: BorderRadius.circular(50),
-              image:
-                  category.imageUrl.isNotEmpty
-                      ? DecorationImage(
-                        image: CachedNetworkImageProvider(category.imageUrl),
-                        fit: BoxFit.cover,
-                      )
-                      : null,
-            ),
-          ),
-          const SizedBox(height: 5),
-          Text(category.name),
-        ],
-      ),
-    );
-  }
+  // Widget _popularContainer({
+  //   required Size size,
+  //   required VoidCallback onTap,
+  //   required String text,
+  // }) {
+  //   final List<ProductModel> categories = sampleProducts;
+  //   final List<String> value = [];
+  //   final category = categories.firstWhere(
+  //     (element) => element.name == text,
+  //     orElse:
+  //         () => ProductModel(name: '', description: '', price: '', categoryId: '', subCategoryId: subCategoryId, quantity: quantity, rating: rating, imageUrls: imageUrls);// Fallback value
+  //   );
+  //   return GestureDetector(
+  //     onTap: onTap,
+  //     child: Column(
+  //       children: [
+  //         Container(
+  //           height: size.height * 0.10,
+  //           width: size.width * 0.20,
+  //           decoration: BoxDecoration(
+  //             color: Colors.pink,
+  //             borderRadius: BorderRadius.circular(50),
+  //             image:
+  //                 category.imageUrl.isNotEmpty
+  //                     ? DecorationImage(
+  //                       image: CachedNetworkImageProvider(category.imageUrl),
+  //                       fit: BoxFit.cover,
+  //                     )
+  //                     : null,
+  //           ),
+  //         ),
+  //         const SizedBox(height: 5),
+  //         Text(category.name),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _dailyNeeds({
     required String text1,

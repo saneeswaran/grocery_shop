@@ -1,34 +1,41 @@
 const Product = require("../model/product");
 
-//product create
 exports.createProduct = async (req, res) => {
-    const { name, description, price, stock, imageUrl, category,categoryId, size, type, color, originalPrice } = req.body;
+  const {
+    name,
+    description,
+    quantity,
+    categoryId,
+    subCategoryId,
+    price,
+    imageUrls,
+  } = req.body;
 
-    try {
-        let product = await Product.create({
-            name,
-            description,
-            price,
-            stock,
-            imageUrl,
-            category,
-            categoryId,
-            size,
-            type,
-            color,
-            originalPrice
-        });
-
-        product = await product.save();
-        res.status(201).send(product);
-    } catch (error) {
-        res.json({ message: error.message });
+  try {
+    if (!name || !description || !quantity || !categoryId || !subCategoryId || !price || !imageUrls) {
+      return res.status(400).json({ message: 'All fields are required' });
     }
-}
+
+    // Correct field names as per ProductSchema
+    let newProduct = new Product({
+      name,
+      description,
+      quantity,
+      categoryId: categoryId,
+      subCategoryId: subCategoryId,
+      price,
+      imageUrls: imageUrls, // Use imageUrl (not imageUrls)
+    });
+await newProduct.save();
+    res.status(201).json({ message: 'Product added successfully', product: newProduct });
+  } catch (error) {
+    console.error("Error while saving product:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
 
 exports.deleteProduct = async (req, res) => {
-    const id = req.query.id || req.body.id || req.params.id;
-
+  const id =req.params.id;
     //checking id
     if (!id) return res.status(400).json({ message: "Product id is required" });
 
@@ -62,21 +69,15 @@ exports.updateProduct = async (req, res) => {
 
 };
 
-exports.getAllProduct = async (req, res) => {
-    try {
-        const { search, limit = 20, page = 1 } = req.query;
-
-        const query = {};
-        if (search) {
-            query.name = { $regex: search, $options: 'i' }; // assuming 'name' is a product field
-        }
-
-        const allProducts = await Product.find(query)
-            .limit(parseInt(limit))
-            .skip((parseInt(page) - 1) * parseInt(limit));
-
-        res.status(200).json(allProducts);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+exports.getAllProducts = async (req, res) => {
+  try {
+    const products = await Product.find()
+      .populate('categoryId')   
+      .populate('subCategoryId'); 
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching products', error });
+  }
 };
+
+

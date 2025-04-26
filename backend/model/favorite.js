@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 
 const favoriteSchema = new mongoose.Schema({
     userId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         required: true
     },
     productId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         required: true
     }
 }); 

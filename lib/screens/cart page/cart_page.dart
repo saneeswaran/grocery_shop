@@ -1,17 +1,39 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_shop/constants/constants.dart';
+import 'package:grocery_shop/provider/cart_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../provider/product_provider.dart';
-
-class CartPage extends StatelessWidget {
+class CartPage extends StatefulWidget {
   const CartPage({super.key});
 
   @override
+  State<CartPage> createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
+  @override
+  void initState() {
+    super.initState();
+    fetchData(context);
+  }
+
+  void fetchData(BuildContext context) async {
+    final pref = await SharedPreferences.getInstance();
+    final token = pref.getString('token');
+    if (context.mounted) {
+      Provider.of<CartProvider>(
+        context,
+        listen: false,
+      ).fetchCartProducts(context: context, userId: token!);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ProductProvider>(context);
-    final cartProducts = provider.cartproducts;
+    final provider = Provider.of<CartProvider>(context);
+    final cartProducts = provider.cart;
     final cartCount = cartProducts.length;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -66,10 +88,10 @@ class CartPage extends StatelessWidget {
 
   Widget _cartProducts({
     required Size size,
-    required ProductProvider provider,
+    required CartProvider provider,
     required int index,
   }) {
-    final cart = provider.cartproducts[index];
+    final cart = provider.cart[index];
     return Container(
       margin: const EdgeInsets.all(8),
       height: size.height * 0.19,
@@ -93,7 +115,7 @@ class CartPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   image: DecorationImage(
-                    image: CachedNetworkImageProvider(cart.imageUrl),
+                    image: CachedNetworkImageProvider(cart.imageUrls[0]),
                     fit: BoxFit.fill,
                     scale: 2,
                   ),
@@ -112,10 +134,10 @@ class CartPage extends StatelessWidget {
                     cart.name,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    "${cart.discount}",
-                    style: TextStyle(fontSize: 16, color: Colors.grey.shade500),
-                  ),
+                  // Text(
+                  //   "${cart.dis}",
+                  //   style: TextStyle(fontSize: 16, color: Colors.grey.shade500),
+                  // ),
                   Row(
                     spacing: size.width * 0.01,
                     children: [
@@ -126,32 +148,33 @@ class CartPage extends StatelessWidget {
                           color: Colors.grey.shade500,
                         ),
                       ),
-                      Text(
-                        "${cart.offerPrice.toInt()}",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      // Text(
+                      //   "${cart.offerPrice.toInt()}",
+                      //   style: TextStyle(
+                      //     fontSize: 16,
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
+                      // ),
                     ],
                   ),
-                  _customRichText(price: provider.specificProduct.toInt()),
+                  _customRichText(price: provider.cart[index].price.toInt()),
                 ],
               ),
             ),
-            Consumer<ProductProvider>(
+            Consumer<CartProvider>(
               builder: (context, provider, child) {
-                final originalProduct = provider.products.firstWhere(
-                  (product) => product.id == cart.id,
-                );
                 return _quanityContainer(
                   size: size,
                   increment: () {
-                    provider.productIncrement(cart.id, originalProduct.stock);
+                    provider.productIncrement(
+                      productId: cart.id.toString(),
+                      stock: 40,
+                    );
                   },
-                  quantity: provider.cartproducts[index].stock,
+                  //  quantity: provider.cartproducts[index].stock,
+                  quantity: 20,
                   decrement: () {
-                    provider.productDecrement(cart.id);
+                    provider.decrementProduct(productId: cart.id.toString());
                   },
                 );
               },
