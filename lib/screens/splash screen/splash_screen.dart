@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:grocery_shop/screens/home%20page/drawer_page.dart';
-import 'package:grocery_shop/screens/home%20page/home_page.dart';
+import 'package:grocery_shop/screens/bottom%20nav%20bar/bottom_navi_bar.dart';
 import 'package:grocery_shop/screens/login%20screen/login_page.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../provider/login_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -19,60 +14,33 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    autoLogin();
+    moveToOtherPage();
   }
 
-  void _checkLogin() async {
-    final provider = Provider.of<LoginProvider>(context, listen: false);
-    final isLogin = await provider.verifyToken();
-
-    if (isLogin) {
-      Navigator.pushReplacement(
-        context,
-        PageTransition(
-          type: PageTransitionType.fade,
-          duration: const Duration(milliseconds: 500),
-          child: const DrawerPage(body: HomePage()),
-        ),
-      );
-    } else {
-      Navigator.pushReplacement(
-        context,
-        PageTransition(
-          type: PageTransitionType.fade,
-          duration: const Duration(milliseconds: 500),
-          child: const LoginPage(),
-        ),
-      );
-    }
-  }
-
-  void autoLogin() async {
-    final pref = await SharedPreferences.getInstance();
-    final token = pref.getString('token');
-    if (token == null) {
-      Navigator.pushReplacement(
-        context,
-        PageTransition(
-          type: PageTransitionType.fade,
-          duration: const Duration(milliseconds: 500),
-          child: DrawerPage(body: HomePage()),
-        ),
-      );
-    } else {
-      Navigator.pushReplacement(
-        context,
-        PageTransition(
-          type: PageTransitionType.fade,
-          duration: const Duration(milliseconds: 500),
-          child: DrawerPage(body: HomePage()),
-        ),
-      );
+  void moveToOtherPage() async {
+    if (context.mounted) {
+      final pref = await SharedPreferences.getInstance();
+      final token = pref.getString('token');
+      if (token == null) {
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginPage()),
+          );
+        }
+      } else {
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const BottomNaviBar()),
+          );
+        }
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text("Splash Screen")));
+    return const Scaffold(body: Center(child: Text("Splash Screen")));
   }
 }

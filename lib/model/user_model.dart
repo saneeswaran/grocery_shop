@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 class UserModel {
+  final String? id;
   final String username;
   final String email;
   final String password;
   UserModel({
+    this.id,
     required this.username,
     required this.email,
     required this.password,
@@ -12,6 +14,7 @@ class UserModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      '_id': id,
       'username': username,
       'email': email,
       'password': password,
@@ -20,6 +23,7 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
+      id: map['_id'] as String,
       username: map['username'] as String,
       email: map['email'] as String,
       password: map['password'] as String,

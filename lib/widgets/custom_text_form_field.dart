@@ -20,8 +20,8 @@ class CustomTextformField extends StatelessWidget {
         filled: true,
         fillColor: Colors.white,
         label: Text(labelText, style: TextStyle(color: Colors.grey.shade500)),
-        border: OutlineInputBorder(borderSide: BorderSide.none),
-        focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+        border: const OutlineInputBorder(borderSide: BorderSide.none),
+        focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
         errorBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.red.shade500),
         ),

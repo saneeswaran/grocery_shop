@@ -12,8 +12,30 @@ List<Widget> carouselItems = List.generate(
 );
 
 List<BoxShadow> categoryContainerShadow = [
-  BoxShadow(offset: Offset(-1, 1), color: Colors.grey.shade400, blurRadius: 3),
-  BoxShadow(offset: Offset(1, -1), color: Colors.grey.shade400, blurRadius: 3),
+  BoxShadow(
+    offset: const Offset(-1, 1),
+    color: Colors.grey.shade500,
+    blurRadius: 3,
+  ),
+  BoxShadow(
+    offset: const Offset(1, -1),
+    color: Colors.grey.shade500,
+    blurRadius: 3,
+  ),
+];
+List<BoxShadow> dailyNeedsProductShadow = [
+  BoxShadow(
+    offset: const Offset(-1, 1),
+    color: Colors.grey.shade300,
+    blurRadius: 3,
+    blurStyle: BlurStyle.outer,
+  ),
+  BoxShadow(
+    offset: const Offset(1, -1),
+    color: Colors.grey.shade300,
+    blurRadius: 3,
+    blurStyle: BlurStyle.outer,
+  ),
 ];
 
 //Color
@@ -25,6 +47,9 @@ const String googleSvgIcon = "assets/svg/google.svg";
 //api url
 
 const String mainUrl = "http://192.168.56.1:3000";
+
+//currency
+const String indianCurrency = '₹';
 
 //api routes
 const String loginRoute = "$mainUrl/user/login";
@@ -52,9 +77,7 @@ const String getCartProductRoute = '$mainUrl/cart/get-cart-product';
 const String addToCartRoute = '$mainUrl/cart/add-to-cart';
 const String deleteFromCartRoute = '$mainUrl/cart/delete-from-cart';
 //header
-Map<String, String> headers = {
-  'Content-Type': 'application/json; charset=UTF-8',
-};
+Map<String, String> headers = {'Content-Type': 'application/json'};
 
 //shadow
 

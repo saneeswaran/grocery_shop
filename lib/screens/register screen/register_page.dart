@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:grocery_shop/screens/register%20screen/provider/register_provider.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import '../../constants/constants.dart';
-import '../../provider/login_provider.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart';
 import '../login screen/login_page.dart';
@@ -19,19 +19,19 @@ class _RegisterPageState extends State<RegisterPage> {
   final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  void registerPage() {
+    final provider = Provider.of<RegisterProvider>(context, listen: false);
+    provider.registerUser(
+      context: context,
+      username: usernameController.text,
+      email: emailController.text,
+      password: passwordController.text,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<LoginProvider>(context);
-
-    void moveToNextPage() {
-      provider.registerUser(
-        context: context,
-        username: usernameController.text,
-        email: emailController.text,
-        password: passwordController.text,
-      );
-    }
-
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
@@ -42,7 +42,7 @@ class _RegisterPageState extends State<RegisterPage> {
             crossAxisAlignment: CrossAxisAlignment.start, //make alignment left
             children: [
               SizedBox(height: size.height * 0.15),
-              Text(
+              const Text(
                 "Sign up",
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
@@ -66,14 +66,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: size.height * 0.07,
                   width: size.width * 0.7,
                   child: CustomElevatedButton(
-                    onPressed: moveToNextPage,
+                    onPressed: registerPage,
                     text: "SIGN UP",
                   ),
                 ),
               ),
               SizedBox(height: size.height * 0.07),
-              Center(
-                child: const Text(
+              const Center(
+                child: Text(
                   "Or login with social account",
                   style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
@@ -101,12 +101,12 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             );
           },
-          child: Text(
-            "Already have an accouont?",
+          child: const Text(
+            "Already have an account?",
             style: TextStyle(color: Colors.black),
           ),
         ),
-        Icon(Icons.arrow_forward_sharp, color: Colors.red),
+        const Icon(Icons.arrow_forward_sharp, color: Colors.red),
       ],
     );
   }
@@ -128,7 +128,7 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           _socialMethodContainer(
             size,
-            Icon(Icons.facebook, color: Colors.blue, size: 30),
+            const Icon(Icons.facebook, color: Colors.blue, size: 30),
           ),
         ],
       ),

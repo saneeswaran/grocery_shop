@@ -2,17 +2,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:grocery_shop/constants/constants.dart';
-import 'package:grocery_shop/http%20error%20handling/http_error_handling.dart';
 import 'package:grocery_shop/model/product_model.dart';
+import 'package:grocery_shop/util/util.dart';
 import 'package:http/http.dart' as http;
 
 class ProductProvider extends ChangeNotifier {
-  List<ProductModel> _product = [];
-  List<ProductModel> _filterProduct = [];
-  List<ProductModel> get product => _product;
-  List<ProductModel> get filterProduct => _filterProduct;
+  List<ProductModel> _products = [];
+  List<ProductModel> _filterProducts = [];
+  List<ProductModel> get products => _products;
+  List<ProductModel> get filterProducts => _filterProducts;
 
-  Future<List<ProductModel>> fetchAllProduct({
+  Future<List<ProductModel>> fetchAllProducts({
     required BuildContext context,
   }) async {
     try {
@@ -20,35 +20,36 @@ class ProductProvider extends ChangeNotifier {
         Uri.parse(getAllProductRoute),
         headers: headers,
       );
+
       if (context.mounted) {
-        httpErroHandling(
+        httpErrorHandling(
           context: context,
           response: response,
           onSuccess: () {
-            List<dynamic> decoded = jsonDecode(response.body);
-            _product =
+            final List<dynamic> decoded = jsonDecode(response.body);
+            _products =
                 decoded.map((json) => ProductModel.fromMap(json)).toList();
+            _filterProducts = _products;
             notifyListeners();
-            _filterProduct = _product;
           },
         );
       }
     } catch (e) {
       if (context.mounted) {
-        showHttpError(context: context, error: e);
+        showHttpError(context: context, e: e);
       }
     }
-    return _product;
+    return _products;
   }
 
-  Future<List<ProductModel>> filterProducts({required String query}) async {
-    _filterProduct =
-        _product
+  Future<List<ProductModel>> filterProduct({required String query}) async {
+    _filterProducts =
+        _products
             .where(
               (item) => item.name.toLowerCase().contains(query.toLowerCase()),
             )
             .toList();
     notifyListeners();
-    return _filterProduct;
+    return _filterProducts;
   }
 }

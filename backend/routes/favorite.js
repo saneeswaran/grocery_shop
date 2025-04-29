@@ -3,8 +3,8 @@ const router = express.Router();
 
 const favoriteController = require("../controllers/favorite");
 
-router.post("/add-to-favorite/:id", favoriteController.addToFavorite)
-router.get("/get-favorite/:userId", favoriteController.getFavorite);
-router.delete("/delete-from-favorite/:id", favoriteController.deleteFromFavorites);
+router.post("/add-to-favorite/", favoriteController.addToFavorite);
+router.get("/get-favorite/", favoriteController.getFavorite);
+router.delete("/delete-from-favorite/", favoriteController.deleteFromFavorites);
 
 module.exports = router;    

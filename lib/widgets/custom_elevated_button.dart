@@ -18,7 +18,10 @@ class CustomElevatedButton extends StatelessWidget {
         backgroundColor: Theme.of(context).primaryColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       ),
-      child: Text(text, style: TextStyle(color: Colors.white, fontSize: 18)),
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.white, fontSize: 18),
+      ),
     );
   }
 }

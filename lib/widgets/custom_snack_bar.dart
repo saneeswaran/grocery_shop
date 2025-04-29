@@ -11,7 +11,7 @@ void successSnackBar(String message, BuildContext context) {
           color: mainColor,
           title: Text(
             message,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w600,
               fontSize: 16,
@@ -20,7 +20,7 @@ void successSnackBar(String message, BuildContext context) {
         ),
     position: DelightSnackbarPosition.top,
     autoDismiss: true,
-    snackbarDuration: const Duration(seconds: 2),
+    snackbarDuration: const Duration(seconds: 3),
   ).show(context);
 }
 
@@ -31,14 +31,34 @@ void failedSnackBar(String message, BuildContext context) {
           color: Colors.red,
           title: Text(
             message,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w600,
               fontSize: 16,
             ),
           ),
         ),
-    snackbarDuration: const Duration(seconds: 2),
+    snackbarDuration: const Duration(seconds: 3),
+    autoDismiss: true,
+    position: DelightSnackbarPosition.top,
+  ).show(context);
+}
+
+void warningSnackBar(String message, BuildContext context) {
+  DelightToastBar(
+    builder:
+        (context) => ToastCard(
+          color: Colors.orange,
+          title: Text(
+            message,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+            ),
+          ),
+        ),
+    snackbarDuration: const Duration(seconds: 3),
     autoDismiss: true,
     position: DelightSnackbarPosition.top,
   ).show(context);

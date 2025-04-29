@@ -6,77 +6,86 @@ class ProductModel {
   final String name;
   final String description;
   final double price;
+  final List<String> imageUrls;
   final String categoryId;
   final String subCategoryId;
   final int quantity;
   final double rating;
-  final List<String> imageUrls;
+
   ProductModel({
     this.id,
     required this.name,
     required this.description,
     required this.price,
+    required this.imageUrls,
     required this.categoryId,
     required this.subCategoryId,
     required this.quantity,
-    required this.rating,
-    required this.imageUrls,
+    this.rating = 1.0,
   });
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      '_id': id,
+    return {
+      if (id != null) '_id': id,
       'name': name,
       'description': description,
       'price': price,
+      'imageUrls': imageUrls,
       'categoryId': categoryId,
       'subCategoryId': subCategoryId,
       'quantity': quantity,
       'rating': rating,
-      'imageUrls': imageUrls,
     };
   }
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
+    final imageData = map['imageUrls'];
     return ProductModel(
-      id: map['_id'] != null ? map['_id'] as String : null,
-      name: map['name'] as String,
-      description: map['description'] as String,
-      price: map['price'] as double,
-      categoryId: map['categoryId'] as String,
-      subCategoryId: map['subCategoryId'] as String,
-      quantity: map['quantity'] as int,
-      rating: map['rating'] as double,
-      imageUrls: List<String>.from((map['imageUrls'] as List<String>)),
+      id: map['_id'],
+      name: map['name'],
+      description: map['description'],
+      quantity: map['quantity'],
+      categoryId:
+          map['categoryId'] is Map
+              ? map['categoryId']['_id']
+              : map['categoryId'],
+      subCategoryId:
+          map['subCategoryId'] is Map
+              ? map['subCategoryId']['_id']
+              : map['subCategoryId'],
+      price: (map['price'] as num).toDouble(),
+      imageUrls: List<String>.from(
+        imageData is List ? imageData : (imageData as Map).values,
+      ),
     );
   }
 
   String toJson() => json.encode(toMap());
 
   factory ProductModel.fromJson(String source) =>
-      ProductModel.fromMap(json.decode(source) as Map<String, dynamic>);
+      ProductModel.fromMap(json.decode(source));
 
   ProductModel copyWith({
     String? id,
     String? name,
     String? description,
     double? price,
+    List<String>? imageUrls,
     String? categoryId,
     String? subCategoryId,
     int? quantity = 1,
     double? rating,
-    List<String>? imageUrls,
   }) {
     return ProductModel(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
       price: price ?? this.price,
+      imageUrls: imageUrls ?? this.imageUrls,
       categoryId: categoryId ?? this.categoryId,
       subCategoryId: subCategoryId ?? this.subCategoryId,
       quantity: quantity ?? this.quantity,
       rating: rating ?? this.rating,
-      imageUrls: imageUrls ?? this.imageUrls,
     );
   }
 }

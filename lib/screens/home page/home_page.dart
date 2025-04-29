@@ -1,21 +1,49 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_shop/constants/constants.dart';
-import 'package:grocery_shop/model/product_model.dart';
 import 'package:grocery_shop/screens/all%20category/all_category.dart';
-import 'package:grocery_shop/screens/home%20page/componenets/all_products.dart';
-import 'package:grocery_shop/screens/home%20page/componenets/product_container.dart';
-import 'package:grocery_shop/screens/home%20page/drawer_page.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:grocery_shop/screens/home%20page/components/all_product_grid_view.dart';
+import 'package:grocery_shop/screens/home%20page/components/daily_needs.dart';
+import 'package:grocery_shop/screens/home%20page/provider/product_provider.dart';
+import 'package:grocery_shop/util/util.dart';
+import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ProductProvider>(
+      context,
+      listen: false,
+    ).fetchAllProducts(context: context);
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.search, color: mainColor),
+          ),
+          Badge.count(
+            count: 3,
+            child: const Icon(Icons.notifications, color: mainColor),
+          ),
+          SizedBox(width: size.width * 0.03),
+        ],
+      ),
+      drawer: const Drawer(),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(10),
@@ -29,18 +57,18 @@ class HomePage extends StatelessWidget {
               _text(text: "Popular Categories"),
               const SizedBox(height: 10),
               _popularCategories(size: size, context: context),
-              _dailyNeeds(
+              _customTitles(
                 text1: "Daily Needs",
                 text2: "View all",
                 onPressed: () {},
               ),
-              _dailyNeedsProducts(size: size),
-              _dailyNeeds(
+              const DailyNeeds(),
+              _customTitles(
                 text1: "All Products",
                 text2: "View all",
                 onPressed: () {},
               ),
-              _allProducts(size: size),
+              const AllProductGridView(),
             ],
           ),
         ),
@@ -53,9 +81,8 @@ class HomePage extends StatelessWidget {
       items: carouselItems,
       options: CarouselOptions(
         height: size.height * 0.25,
-        autoPlay: true,
+        // autoPlay: true,
         enlargeCenterPage: true,
-        aspectRatio: 16 / 9,
         autoPlayInterval: const Duration(seconds: 3),
       ),
     );
@@ -76,84 +103,73 @@ class HomePage extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       height: size.height * 0.32,
       width: size.width,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              //   _popularContainer(size: size, text: "Vegetables", onTap: () {}),
-              // _popularContainer(size: size, text: "Fruits", onTap: () {}),
-              //_popularContainer(size: size, text: "Bakery", onTap: () {}),
-              // _popularContainer(size: size, text: "Dairy", onTap: () {}),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // _popularContainer(size: size, text: "Meat", onTap: () {}),
-              // _popularContainer(size: size, text: "Snacks", onTap: () {}),
-              // _popularContainer(size: size, text: "Beverages", onTap: () {}),
-              // _popularContainer(
-              //  size: size,
-              //   text: "View All",
-              //   onTap: () {
-              //     Navigator.push(
-              //       context,
-              //       PageTransition(
-              //         type: PageTransitionType.fade,
-              //         duration: const Duration(milliseconds: 500),
-              //         child: DrawerPage(body: AllCategory()),
-              //       ),
-              //     );
-              //   },
-              // ),
-            ],
-          ),
-        ],
+      child: GridView.builder(
+        itemCount: 6,
+        scrollDirection: Axis.horizontal,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+        ),
+        itemBuilder: (context, categoryIndex) {
+          return categoryIndex == 5
+              ? _viewAllContainer(context: context, size: size)
+              : _categoryContainer(size: size);
+        },
       ),
     );
   }
 
-  // Widget _popularContainer({
-  //   required Size size,
-  //   required VoidCallback onTap,
-  //   required String text,
-  // }) {
-  //   final List<ProductModel> categories = sampleProducts;
-  //   final List<String> value = [];
-  //   final category = categories.firstWhere(
-  //     (element) => element.name == text,
-  //     orElse:
-  //         () => ProductModel(name: '', description: '', price: '', categoryId: '', subCategoryId: subCategoryId, quantity: quantity, rating: rating, imageUrls: imageUrls);// Fallback value
-  //   );
-  //   return GestureDetector(
-  //     onTap: onTap,
-  //     child: Column(
-  //       children: [
-  //         Container(
-  //           height: size.height * 0.10,
-  //           width: size.width * 0.20,
-  //           decoration: BoxDecoration(
-  //             color: Colors.pink,
-  //             borderRadius: BorderRadius.circular(50),
-  //             image:
-  //                 category.imageUrl.isNotEmpty
-  //                     ? DecorationImage(
-  //                       image: CachedNetworkImageProvider(category.imageUrl),
-  //                       fit: BoxFit.cover,
-  //                     )
-  //                     : null,
-  //           ),
-  //         ),
-  //         const SizedBox(height: 5),
-  //         Text(category.name),
-  //       ],
-  //     ),
-  //   );
-  // }
+  Widget _categoryContainer({required Size size}) {
+    return Column(
+      children: [
+        Container(
+          margin: EdgeInsets.only(right: size.width * 0.01),
+          height: size.height * 0.12,
+          width: size.width * 0.25,
+          decoration: const BoxDecoration(
+            color: Colors.pink,
+            shape: BoxShape.circle,
+          ),
+        ),
+        const Text(" Name", maxLines: 1, overflow: TextOverflow.ellipsis),
+      ],
+    );
+  }
 
-  Widget _dailyNeeds({
+  Widget _viewAllContainer({
+    required Size size,
+    required BuildContext context,
+  }) {
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            moveToPage(context, const AllCategory());
+          },
+          child: Container(
+            margin: EdgeInsets.only(right: size.width * 0.02),
+            height: size.height * 0.12,
+            width: size.width * 0.25,
+            decoration: const BoxDecoration(
+              color: mainColor,
+              shape: BoxShape.circle,
+            ),
+            child: const Center(
+              child: Text(
+                "+1",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+        const Text("View All", maxLines: 1, overflow: TextOverflow.ellipsis),
+      ],
+    );
+  }
+
+  Widget _customTitles({
     required String text1,
     required String text2,
     required VoidCallback onPressed,
@@ -171,24 +187,5 @@ class HomePage extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Widget _dailyNeedsProducts({required Size size}) {
-    return SizedBox(
-      height: size.height * 0.40,
-      width: size.width * 1,
-      child: ListView.builder(
-        itemCount: 3,
-        scrollDirection: Axis.horizontal,
-
-        itemBuilder: (context, index) {
-          return ProductContainer(index: index);
-        },
-      ),
-    );
-  }
-
-  Widget _allProducts({required Size size}) {
-    return SizedBox(width: size.width * 1, child: AllProducts());
   }
 }

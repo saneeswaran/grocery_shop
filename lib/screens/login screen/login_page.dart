@@ -1,14 +1,17 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:grocery_shop/provider/login_provider.dart';
+import 'package:grocery_shop/screens/bottom%20nav%20bar/bottom_navi_bar.dart';
+import 'package:grocery_shop/screens/register%20screen/provider/register_provider.dart';
+import 'package:grocery_shop/util/util.dart';
 import 'package:grocery_shop/widgets/custom_snack_bar.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants/constants.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart';
-import '../home page/drawer_page.dart';
-import '../home page/home_page.dart';
 import '../register screen/register_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -22,31 +25,32 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool isLoading = false;
-  @override
-  Widget build(BuildContext context) {
-    void moveToNextPage() async {
-      final provider = Provider.of<LoginProvider>(context, listen: false);
-      final isLogin = await provider.loginUser(
-        context: context,
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
 
-      if (isLogin) {
-        successSnackBar("Login Success", context);
-        Navigator.pushReplacement(
-          context,
-          PageTransition(
-            type: PageTransitionType.fade,
-            duration: const Duration(milliseconds: 500),
-            child: const DrawerPage(body: HomePage()),
-          ),
-        );
+  void loginUser() async {
+    final provider = Provider.of<RegisterProvider>(context, listen: false);
+    bool isSuccess = await provider.loginUser(
+      context: context,
+      email: emailController.text,
+      password: passwordController.text,
+    );
+    final pref = await SharedPreferences.getInstance();
+    final userId = pref.getString('userId');
+    log(userId.toString());
+    log(isSuccess.toString());
+
+    if (mounted) {
+      if (isSuccess) {
+        moveToNextPageWithReplace(context, const BottomNaviBar());
       } else {
-        failedSnackBar("Login Failed", context);
+        if (context.mounted) {
+          failedSnackBar("Invalid email or password", context);
+        }
       }
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
@@ -57,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.start, //make alignment left
             children: [
               SizedBox(height: size.height * 0.15),
-              Text(
+              const Text(
                 "Login",
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
@@ -77,16 +81,14 @@ class _LoginPageState extends State<LoginPage> {
                   height: size.height * 0.07,
                   width: size.width * 0.7,
                   child: CustomElevatedButton(
-                    onPressed: () {
-                      moveToNextPage();
-                    },
+                    onPressed: loginUser,
                     text: "LOGIN",
                   ),
                 ),
               ),
               SizedBox(height: size.height * 0.07),
-              Center(
-                child: const Text(
+              const Center(
+                child: Text(
                   "Or login with social account",
                   style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
@@ -114,12 +116,12 @@ class _LoginPageState extends State<LoginPage> {
               ),
             );
           },
-          child: Text(
+          child: const Text(
             "Create an account",
             style: TextStyle(color: Colors.black),
           ),
         ),
-        Icon(Icons.arrow_forward_sharp, color: Colors.red),
+        const Icon(Icons.arrow_forward_sharp, color: Colors.red),
       ],
     );
   }
@@ -141,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           _socialMethodContainer(
             size,
-            Icon(Icons.facebook, color: Colors.blue, size: 30),
+            const Icon(Icons.facebook, color: Colors.blue, size: 30),
           ),
         ],
       ),
