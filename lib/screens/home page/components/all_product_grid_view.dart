@@ -108,35 +108,24 @@ class AllProductGridView extends StatelessWidget {
                               final isInBag = bag.cart.any(
                                 (item) => item.id == products.id,
                               );
-                              final itemLength = bag.cart.length;
-
                               return _iconButton(
                                 size: size,
                                 icon:
                                     isInBag
                                         ? Icons.shopping_cart
                                         : Icons.shopping_cart_outlined,
-                                onPressed: () async {
-                                  final pref =
-                                      await SharedPreferences.getInstance();
-                                  final userId = pref.getString('userId');
+                                onPressed: () {
                                   if (context.mounted) {
-                                    final bool isSuccess = await bag.addToCart(
-                                      context: context,
-                                      userId: userId!,
-                                      productId: products.id.toString(),
-                                      product: products,
-                                    );
-                                    log(itemLength.toString());
-                                    if (isSuccess) {
-                                      successSnackBar(
-                                        "Product added to cart",
-                                        context,
+                                    if (!isInBag) {
+                                      bag.addToCart(
+                                        context: context,
+                                        productId: products.id.toString(),
+                                        product: products,
                                       );
                                     } else {
-                                      successSnackBar(
-                                        "Product already added to cart",
-                                        context,
+                                      bag.deleteProductFromCart(
+                                        context: context,
+                                        productId: products.id.toString(),
                                       );
                                     }
                                   }

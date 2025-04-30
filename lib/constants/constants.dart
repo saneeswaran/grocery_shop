@@ -76,6 +76,7 @@ const String fetchFavoriteProductRoute = '$mainUrl/favorite/get-favorite';
 const String getCartProductRoute = '$mainUrl/cart/get-cart-product';
 const String addToCartRoute = '$mainUrl/cart/add-to-cart';
 const String deleteFromCartRoute = '$mainUrl/cart/delete-from-cart';
+const String getUserCartProductRoute = '$mainUrl/cart/get-user-cart-product';
 //header
 Map<String, String> headers = {'Content-Type': 'application/json'};
 

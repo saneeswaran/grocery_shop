@@ -36,3 +36,19 @@ exports.getCartProduct = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+
+exports.getSpecificUserCart = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const cartProduct = await Cart.find({ userId }).populate("productId");
+
+    if (cartProduct.length === 0) {
+      return res.status(404).json({ message: "No items found in the cart." });
+    }
+
+    res.status(200).json(cartProduct);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

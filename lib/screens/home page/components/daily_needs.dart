@@ -37,7 +37,6 @@ class DailyNeeds extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Colors.grey.shade200),
-                    color: Colors.pink,
                     image: const DecorationImage(
                       image: NetworkImage(
                         'https://organicmandya.com/cdn/shop/files/Apples_bf998dd2-0ee8-4880-9726-0723c6fbcff3.jpg?v=1721368465&width=1000',

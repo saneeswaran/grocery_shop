@@ -5,6 +5,7 @@ import 'package:grocery_shop/screens/all%20category/all_category.dart';
 import 'package:grocery_shop/screens/home%20page/components/all_product_grid_view.dart';
 import 'package:grocery_shop/screens/home%20page/components/daily_needs.dart';
 import 'package:grocery_shop/screens/home%20page/provider/product_provider.dart';
+import 'package:grocery_shop/screens/shopping%20bag/provider/shopping_bag_provider.dart';
 import 'package:grocery_shop/util/util.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +24,10 @@ class _HomePageState extends State<HomePage> {
       context,
       listen: false,
     ).fetchAllProducts(context: context);
+    Provider.of<ShoppingBagProvider>(
+      context,
+      listen: false,
+    ).getUserCartProduct(context: context);
   }
 
   @override
@@ -69,6 +74,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {},
               ),
               const AllProductGridView(),
+              SizedBox(height: size.height * 0.1),
             ],
           ),
         ),
