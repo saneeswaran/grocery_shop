@@ -1,7 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_shop/constants/constants.dart';
 import 'package:grocery_shop/screens/all%20category/all_category.dart';
+import 'package:grocery_shop/screens/all%20category/provider/category_provider.dart';
+import 'package:grocery_shop/screens/favorite%20page/provider/favorite_provider.dart';
 import 'package:grocery_shop/screens/home%20page/components/all_product_grid_view.dart';
 import 'package:grocery_shop/screens/home%20page/components/daily_needs.dart';
 import 'package:grocery_shop/screens/home%20page/provider/product_provider.dart';
@@ -28,10 +31,21 @@ class _HomePageState extends State<HomePage> {
       context,
       listen: false,
     ).getUserCartProduct(context: context);
+    Provider.of<FavoriteProvider>(
+      context,
+      listen: false,
+    ).fetchSpecificUserFavoriteProduct(context: context);
+
+    Provider.of<CategoryProvider>(
+      context,
+      listen: false,
+    ).fetchAllcCategory(context: context);
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<CategoryProvider>(context);
+    final category = provider.category;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -61,7 +75,11 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 20),
               _text(text: "Popular Categories"),
               const SizedBox(height: 10),
-              _popularCategories(size: size, context: context),
+              _popularCategories(
+                size: size,
+                context: context,
+                provider: provider,
+              ),
               _customTitles(
                 text1: "Daily Needs",
                 text2: "View all",
@@ -104,40 +122,54 @@ class _HomePageState extends State<HomePage> {
   Widget _popularCategories({
     required Size size,
     required BuildContext context,
+    required CategoryProvider provider,
   }) {
     return Container(
       padding: const EdgeInsets.all(10),
       height: size.height * 0.32,
       width: size.width,
       child: GridView.builder(
-        itemCount: 6,
+        itemCount: provider.category.length,
         scrollDirection: Axis.horizontal,
+        physics: const AlwaysScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
         ),
         itemBuilder: (context, categoryIndex) {
           return categoryIndex == 5
               ? _viewAllContainer(context: context, size: size)
-              : _categoryContainer(size: size);
+              : _categoryContainer(size: size, index: categoryIndex);
         },
       ),
     );
   }
 
-  Widget _categoryContainer({required Size size}) {
-    return Column(
-      children: [
-        Container(
-          margin: EdgeInsets.only(right: size.width * 0.01),
-          height: size.height * 0.12,
-          width: size.width * 0.25,
-          decoration: const BoxDecoration(
-            color: Colors.pink,
-            shape: BoxShape.circle,
-          ),
-        ),
-        const Text(" Name", maxLines: 1, overflow: TextOverflow.ellipsis),
-      ],
+  Widget _categoryContainer({required Size size, required int index}) {
+    return Consumer<CategoryProvider>(
+      builder: (context, value, child) {
+        final category = value.category[index];
+        return Column(
+          children: [
+            Container(
+              margin: EdgeInsets.only(right: size.width * 0.01),
+              height: size.height * 0.12,
+              width: size.width * 0.25,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: CachedNetworkImageProvider(category.image),
+                  fit: BoxFit.cover,
+                ),
+                shape: BoxShape.circle,
+              ),
+            ),
+            Text(
+              " ${category.name}",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        );
+      },
     );
   }
 

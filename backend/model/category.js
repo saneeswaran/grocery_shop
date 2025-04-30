@@ -7,6 +7,7 @@ const categorySchema = new mongoose.Schema(
       required: true,
       unique: true,  // No duplicate category names
       trim: true,
+      ref: "Product",
     },
     image: {
       type: String, // Store image URL or base64 string

@@ -51,7 +51,6 @@ class _ShoppingBagState extends State<ShoppingBag> {
           IconButton(
             onPressed: () {
               provider.showSearchBar();
-              log(isShowSearchBar.toString());
             },
             icon: const Icon(Icons.search, color: mainColor),
           ),

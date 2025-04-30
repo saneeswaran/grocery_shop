@@ -1,7 +1,5 @@
-const { json } = require("express");
 const Category = require("../model/category");
 const subcategory = require("../model/subcategory");
-const SubCategory = require("../model/subcategory");
 
 exports.createCategory = async (req, res) => {
   const { name, image } = req.body;
@@ -35,7 +33,15 @@ exports.getAllCategories = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
+exports.getSpecificCategoryProduct = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const categoryProduct = await Category.findById(id).populate("products");
+    res.status(200).json(categoryProduct);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
 exports.deleteCategory = async (req, res) => {
   const id = req.query?.id || req.body?.id || req.params?.id;
 

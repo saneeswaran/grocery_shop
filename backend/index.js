@@ -17,9 +17,9 @@ const cart = require("./routes/cart");
 const category = require("./routes/category");
 const subcategory = require("./routes/subcategory");
 const auth = require("./routes/auth");
-app.use("/auth", auth);
 
 //database routes
+app.use("/auth", auth);
 app.use('/product', product);
 app.use('/user', authedication);
 app.use('/favorite', favorite);

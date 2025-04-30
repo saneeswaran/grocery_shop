@@ -6,21 +6,27 @@ import 'package:grocery_shop/model/product_model.dart';
 import 'package:grocery_shop/util/util.dart';
 import 'package:grocery_shop/widgets/custom_snack_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FavoriteProvider extends ChangeNotifier {
   List<ProductModel> _favorite = [];
   List<ProductModel> _filterFavorite = [];
+  bool _isShowSearchBar = false;
+  bool get isShowSearchBar => _isShowSearchBar;
   List<ProductModel> get favorite => _favorite;
   List<ProductModel> get filterFavorite => _filterFavorite;
 
-  Future<List<ProductModel>> fetchAllFavoriteProduct({
+  Future<List<ProductModel>> fetchSpecificUserFavoriteProduct({
     required BuildContext context,
   }) async {
+    final pref = await SharedPreferences.getInstance();
+    final userId = pref.getString('userId');
     try {
       final response = await http.get(
-        Uri.parse(fetchFavoriteProductRoute),
+        Uri.parse('$getSpecificUserFavoriteRoute/$userId'),
         headers: headers,
       );
+
       if (context.mounted) {
         httpErrorHandling(
           context: context,
@@ -28,7 +34,10 @@ class FavoriteProvider extends ChangeNotifier {
           onSuccess: () {
             final List<dynamic> decoded = jsonDecode(response.body);
             _favorite =
-                decoded.map((json) => ProductModel.fromMap(json)).toList();
+                decoded.map((json) {
+                  final productData = json['productId'];
+                  return ProductModel.fromMap(productData);
+                }).toList();
             _filterFavorite = _favorite;
             notifyListeners();
           },
@@ -44,11 +53,12 @@ class FavoriteProvider extends ChangeNotifier {
 
   Future<bool> addToFavorite({
     required BuildContext context,
-    required String userId,
     required String productId,
     required ProductModel product,
   }) async {
     try {
+      final pref = await SharedPreferences.getInstance();
+      final userId = pref.getString('userId');
       final response = await http.post(
         Uri.parse(addToFavouriteInDatabaseRoute),
         headers: headers,
@@ -78,9 +88,10 @@ class FavoriteProvider extends ChangeNotifier {
 
   Future<bool> deleteProductFromFavorites({
     required BuildContext context,
-    required String userId,
     required String productId,
   }) async {
+    final pref = await SharedPreferences.getInstance();
+    final userId = pref.getString('userId');
     try {
       final response = await http.delete(
         Uri.parse(deleteFromFavouritesRoute),
@@ -118,5 +129,17 @@ class FavoriteProvider extends ChangeNotifier {
             )
             .toList();
     return _filterFavorite;
+  }
+
+  bool showSearchBar() {
+    _isShowSearchBar = !_isShowSearchBar;
+    notifyListeners();
+    return isShowSearchBar;
+  }
+
+  bool removeSearchBar() {
+    _isShowSearchBar = false;
+    notifyListeners();
+    return _isShowSearchBar;
   }
 }

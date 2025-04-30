@@ -1,13 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:grocery_shop/constants/constants.dart';
 import 'package:grocery_shop/screens/favorite%20page/provider/favorite_provider.dart';
 import 'package:grocery_shop/screens/home%20page/provider/product_provider.dart';
 import 'package:grocery_shop/screens/shopping%20bag/provider/shopping_bag_provider.dart';
-import 'package:grocery_shop/widgets/custom_snack_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AllProductGridView extends StatelessWidget {
   const AllProductGridView({super.key});
@@ -72,30 +68,20 @@ class AllProductGridView extends StatelessWidget {
                                     isFav
                                         ? Icons.favorite
                                         : Icons.favorite_outline,
-                                onPressed: () async {
-                                  final pref =
-                                      await SharedPreferences.getInstance();
-                                  final userId = pref.getString('userId');
-                                  log(userId.toString());
-                                  log(isFav.toString());
+                                onPressed: () {
                                   if (context.mounted) {
-                                    final bool isSuccess =
-                                        await favoriteProvider.addToFavorite(
-                                          context: context,
-                                          userId: userId!,
-                                          productId: products.id.toString(),
-                                          product: products,
-                                        );
-                                    if (isSuccess) {
-                                      successSnackBar(
-                                        "Product added to favorite",
-                                        context,
+                                    if (!isFav) {
+                                      favoriteProvider.addToFavorite(
+                                        context: context,
+                                        productId: products.id.toString(),
+                                        product: products,
                                       );
                                     } else {
-                                      successSnackBar(
-                                        "Product already added to favorite",
-                                        context,
-                                      );
+                                      favoriteProvider
+                                          .deleteProductFromFavorites(
+                                            context: context,
+                                            productId: products.id.toString(),
+                                          );
                                     }
                                   }
                                 },

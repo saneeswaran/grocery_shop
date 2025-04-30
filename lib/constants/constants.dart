@@ -61,6 +61,7 @@ const String verifyTokenRoute = "$mainUrl/user/verify-token";
 const String getAllProductRoute = '$mainUrl/product/get-all-products';
 //category routes
 const String getAllCategoryRoute = '$mainUrl/category/get-all-categories';
+const String getCategoryByIdRoute = '$mainUrl/category/get-by-id';
 
 //subcategory routes
 const String getAllSubCategoryRoute = '$mainUrl/subcategory/getAllSubcategory';
@@ -71,6 +72,8 @@ const String addToFavouriteInDatabaseRoute =
 const String deleteFromFavouritesRoute =
     '$mainUrl/favorite/delete-from-favorite';
 const String fetchFavoriteProductRoute = '$mainUrl/favorite/get-favorite';
+const String getSpecificUserFavoriteRoute =
+    '$mainUrl/favorite/get-user-favorite';
 
 //cart
 const String getCartProductRoute = '$mainUrl/cart/get-cart-product';

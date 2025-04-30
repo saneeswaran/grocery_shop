@@ -53,3 +53,13 @@ exports.deleteFromFavorites = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+
+exports.getSpecificUserFavorite = async (req, res) => {
+    const userId = req.params.id;
+try {
+    const favoriteProduct = await Favorite.find({ userId }).populate("productId");
+    if(!favoriteProduct) return res.status(404).json({ message: "No items found in the favorite." });
+    res.status(200).json(favoriteProduct);
+} catch (error) {
+    res.status(500).json({ message: error.message });
+}}
