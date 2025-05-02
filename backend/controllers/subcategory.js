@@ -14,13 +14,16 @@ exports.addSubCategory = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-exports.getSubCategoriesByCategory = async (req, res) => {
+exports.getSubcategoryById = async (req, res) => {
   const { categoryId } = req.params;
+  console.log("Category ID received:", categoryId); // log this
 
   try {
-    const subcategories = await SubCategory.find({ categoryId });
-    res.status(200).json(subcategories);
+    const subcategory = await SubCategory.find({ categoryId });
+    if (!subcategory || subcategory.length === 0) {
+      return res.status(404).json({ message: "Subcategory not found" });
+    }
+    res.status(200).json(subcategory);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -54,7 +57,7 @@ exports.deleteSubCategory = async (req, res) => {
 };
 
 exports.updateSubcategory = async (req, res) => {
-  const { id } = req.params;  // Fixed this line
+  const { id } = req.params; 
   const newData = req.body;
 
   try {

@@ -19,7 +19,7 @@ class _AllCategoryState extends State<AllCategory> {
     Provider.of<CategoryProvider>(
       context,
       listen: false,
-    ).fetchAllcCategory(context: context);
+    ).fetchAllCategory(context: context);
   }
 
   @override

@@ -1,16 +1,19 @@
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:grocery_shop/constants/constants.dart';
 import 'package:grocery_shop/model/product_model.dart';
 import 'package:grocery_shop/util/util.dart';
-import 'package:http/http.dart' as http;
 
 class ProductProvider extends ChangeNotifier {
   List<ProductModel> _products = [];
   List<ProductModel> _filterProducts = [];
+  List<ProductModel> _filterProductsBySubcategoryId = [];
+
   List<ProductModel> get products => _products;
   List<ProductModel> get filterProducts => _filterProducts;
+  List<ProductModel> get filterProductsBySubcategoryId =>
+      _filterProductsBySubcategoryId;
 
   Future<List<ProductModel>> fetchAllProducts({
     required BuildContext context,
@@ -51,5 +54,19 @@ class ProductProvider extends ChangeNotifier {
             .toList();
     notifyListeners();
     return _filterProducts;
+  }
+
+  Future<List<ProductModel>> filterProductBySubcategoryId({
+    required String subcategoryId,
+  }) async {
+    _filterProductsBySubcategoryId =
+        _products.where((item) => item.subCategoryId == subcategoryId).toList();
+    notifyListeners();
+    return _filterProductsBySubcategoryId;
+  }
+
+  void clearSubcategoryFilter() {
+    _filterProductsBySubcategoryId = [];
+    notifyListeners();
   }
 }

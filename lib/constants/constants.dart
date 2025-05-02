@@ -65,6 +65,10 @@ const String getCategoryByIdRoute = '$mainUrl/category/get-by-id';
 
 //subcategory routes
 const String getAllSubCategoryRoute = '$mainUrl/subcategory/getAllSubcategory';
+const String getAllSubCategoryProductRoute =
+    '$mainUrl/subcategory/get-all-sub-categories-product';
+const String getSubcategryByCategoryIdRoute =
+    '$mainUrl/subcategory/get-sub-category-by-id';
 
 //favorite
 const String addToFavouriteInDatabaseRoute =
@@ -80,6 +84,7 @@ const String getCartProductRoute = '$mainUrl/cart/get-cart-product';
 const String addToCartRoute = '$mainUrl/cart/add-to-cart';
 const String deleteFromCartRoute = '$mainUrl/cart/delete-from-cart';
 const String getUserCartProductRoute = '$mainUrl/cart/get-user-cart-product';
+
 //header
 Map<String, String> headers = {'Content-Type': 'application/json'};
 

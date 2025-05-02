@@ -35,7 +35,7 @@ class _FavoritePageState extends State<FavoritePage> {
             provider.isShowSearchBar
                 ? TextField(controller: filterFavoriteController)
                 : const Text(
-                  "Shopping Bag",
+                  "Favorites",
                   style: TextStyle(
                     color: mainColor,
                     fontSize: 24,

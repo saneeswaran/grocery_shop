@@ -128,6 +128,7 @@ class FavoriteProvider extends ChangeNotifier {
               (item) => item.name.toLowerCase().contains(query.toLowerCase()),
             )
             .toList();
+    notifyListeners();
     return _filterFavorite;
   }
 

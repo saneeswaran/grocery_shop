@@ -7,7 +7,9 @@ import 'package:grocery_shop/screens/all%20category/provider/category_provider.d
 import 'package:grocery_shop/screens/favorite%20page/provider/favorite_provider.dart';
 import 'package:grocery_shop/screens/home%20page/components/all_product_grid_view.dart';
 import 'package:grocery_shop/screens/home%20page/components/daily_needs.dart';
+import 'package:grocery_shop/screens/home%20page/components/show_products_by_category.dart';
 import 'package:grocery_shop/screens/home%20page/provider/product_provider.dart';
+import 'package:grocery_shop/screens/home%20page/provider/subcategory_provider.dart';
 import 'package:grocery_shop/screens/shopping%20bag/provider/shopping_bag_provider.dart';
 import 'package:grocery_shop/util/util.dart';
 import 'package:provider/provider.dart';
@@ -39,13 +41,12 @@ class _HomePageState extends State<HomePage> {
     Provider.of<CategoryProvider>(
       context,
       listen: false,
-    ).fetchAllcCategory(context: context);
+    ).fetchAllCategory(context: context);
   }
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<CategoryProvider>(context);
-    final category = provider.category;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -150,16 +151,28 @@ class _HomePageState extends State<HomePage> {
         final category = value.category[index];
         return Column(
           children: [
-            Container(
-              margin: EdgeInsets.only(right: size.width * 0.01),
-              height: size.height * 0.12,
-              width: size.width * 0.25,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: CachedNetworkImageProvider(category.image),
-                  fit: BoxFit.cover,
+            GestureDetector(
+              onTap: () {
+                Provider.of<SubcategoryProvider>(
+                  context,
+                  listen: false,
+                ).filterSubcategoryByCategoryId(categoryId: category.id);
+                moveToPage(
+                  context,
+                  ShowProductsByCategory(categoryId: value.category[index].id),
+                );
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: size.width * 0.01),
+                height: size.height * 0.12,
+                width: size.width * 0.25,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: CachedNetworkImageProvider(category.image),
+                    fit: BoxFit.cover,
+                  ),
+                  shape: BoxShape.circle,
                 ),
-                shape: BoxShape.circle,
               ),
             ),
             Text(

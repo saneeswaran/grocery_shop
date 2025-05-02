@@ -89,3 +89,18 @@ exports.updateCategory = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+exports.getSubCategoriesAndProducts = async (req, res) => {
+  const categoryId = req.params.id;
+  try {
+    
+    const subcategories = await subcategory.find({ categoryId });
+    const subcategoryIds = subcategories.map(sc => sc._id);
+    const products = await Product.find({ subcategoryId: { $in: subcategoryIds } });
+    res.json({
+  subcategories,
+  products
+});
+  } catch (error) {
+res.status(500).json({ message: error.message });
+  }
+}
