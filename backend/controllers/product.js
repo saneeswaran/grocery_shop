@@ -80,10 +80,23 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
-exports.getSubcategoryProducts = async (req, res) => {
-  const { subcategoryId } = req.params;
+exports.getProductsbyCategory = async (req, res) => {
+  const category = req.query.category;
+  console.log(category);
   try {
-    const products = await Product.find({ subcategoryId });
+    const products = await Product.find({ categoryId: category });
+    if(!products || products.length == 0) return res.status(404).json({ message: "No products found" });
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+exports.getSubcategoryProducts = async (req, res) => {
+  const subcategory = req.query.subcategory;
+  console.log(subcategory);
+  try {
+    const products = await Product.find({ subcategoryId: subcategory });
     if (!products || products.length === 0) {
       return res.status(404).json({ message: "No products found" });
     }
@@ -91,7 +104,8 @@ exports.getSubcategoryProducts = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}
+};
+
 
 
 

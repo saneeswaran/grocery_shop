@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_shop/constants/constants.dart';
 import 'package:grocery_shop/screens/favorite%20page/provider/favorite_provider.dart';
@@ -30,7 +31,21 @@ class AllProductGridView extends StatelessWidget {
         final products = product[index];
         return GestureDetector(
           onTap: () {
-            moveToPage(context, const ProductDetailsPage());
+            moveToPage(
+              context,
+              ProductDetailsPage(
+                productId: products.id!,
+                productTitle: products.name,
+                productImage: products.imageUrls,
+                productPrice: products.price.toString(),
+                productCategory: products.categoryId,
+                productDescription: products.description,
+                productQuantity: products.quantity.toString(),
+                productRating: products.rating.toString(),
+                productSubcategory: products.subCategoryId,
+                productModel: products,
+              ),
+            );
           },
           child: Container(
             decoration: BoxDecoration(
@@ -53,7 +68,9 @@ class AllProductGridView extends StatelessWidget {
                             topRight: Radius.circular(size.width * 0.03),
                           ),
                           image: DecorationImage(
-                            image: NetworkImage(products.imageUrls[0]),
+                            image: CachedNetworkImageProvider(
+                              products.imageUrls[0],
+                            ),
                             fit: BoxFit.cover,
                           ),
                         ),

@@ -75,7 +75,6 @@ class _ShoppingBagState extends State<ShoppingBag> {
       body: GestureDetector(
         onTap: () {
           provider.hideSearchBar();
-          log(isShowSearchBar.toString());
         },
         child: Container(
           padding: EdgeInsets.all(size.width * 0.03),
@@ -196,6 +195,7 @@ class _ShoppingBagState extends State<ShoppingBag> {
                                               cartProduct.quantity.toString(),
                                           decreaseQuantity: () {
                                             provider.decreaseQuantity(
+                                              context: context,
                                               productId:
                                                   cartProduct.id.toString(),
                                             );
@@ -217,7 +217,6 @@ class _ShoppingBagState extends State<ShoppingBag> {
                 onPressed: () async {
                   final pref = await SharedPreferences.getInstance();
                   final userId = pref.getString('userId');
-                  log(userId.toString());
                 },
               ),
             ],

@@ -71,7 +71,7 @@ class ShoppingBagProvider extends ChangeNotifier {
           context: context,
           response: response,
           onSuccess: () {
-            _cart.add(product);
+            _cart.add(product.copyWith());
             _filterCart = _cart;
             successSnackBar("Product added successfully", context);
             notifyListeners();
@@ -186,10 +186,13 @@ class ShoppingBagProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void decreaseQuantity({required String productId}) {
+  void decreaseQuantity({
+    required String productId,
+    required BuildContext context,
+  }) {
     final int index = _cart.indexWhere((item) => item.id == productId);
     if (index == -1 || _cart[index].quantity <= 1) {
-      return;
+      deleteProductFromCart(context: context, productId: productId);
     }
 
     _cart[index] = _cart[index].copyWith(quantity: _cart[index].quantity - 1);

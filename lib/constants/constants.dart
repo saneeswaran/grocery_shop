@@ -59,6 +59,10 @@ const String verifyTokenRoute = "$mainUrl/user/verify-token";
 
 //products
 const String getAllProductRoute = '$mainUrl/product/get-all-products';
+const String getAllProductByCategoryRoute =
+    '$mainUrl/product/get-products-by-category';
+const String getProductsBySubcategoryRoute =
+    '$mainUrl/product/get-products-by-subcategory';
 //category routes
 const String getAllCategoryRoute = '$mainUrl/category/get-all-categories';
 const String getCategoryByIdRoute = '$mainUrl/category/get-by-id';

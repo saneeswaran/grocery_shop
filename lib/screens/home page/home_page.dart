@@ -9,7 +9,6 @@ import 'package:grocery_shop/screens/home%20page/components/all_product_grid_vie
 import 'package:grocery_shop/screens/home%20page/components/daily_needs.dart';
 import 'package:grocery_shop/screens/home%20page/components/show_products_by_category.dart';
 import 'package:grocery_shop/screens/home%20page/provider/product_provider.dart';
-import 'package:grocery_shop/screens/home%20page/provider/subcategory_provider.dart';
 import 'package:grocery_shop/screens/shopping%20bag/provider/shopping_bag_provider.dart';
 import 'package:grocery_shop/util/util.dart';
 import 'package:provider/provider.dart';
@@ -153,13 +152,9 @@ class _HomePageState extends State<HomePage> {
           children: [
             GestureDetector(
               onTap: () {
-                Provider.of<SubcategoryProvider>(
-                  context,
-                  listen: false,
-                ).filterSubcategoryByCategoryId(categoryId: category.id);
                 moveToPage(
                   context,
-                  ShowProductsByCategory(categoryId: value.category[index].id),
+                  ShowProductsByCategory(category: value.category[index].id),
                 );
               },
               child: Container(

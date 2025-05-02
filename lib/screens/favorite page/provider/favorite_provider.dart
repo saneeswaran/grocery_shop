@@ -72,7 +72,7 @@ class FavoriteProvider extends ChangeNotifier {
           onSuccess: () {
             _favorite.add(product);
             _filterFavorite = _favorite;
-            successSnackBar("Product added successfullt", context);
+            successSnackBar("Product added successfully", context);
             notifyListeners();
           },
         );
@@ -105,7 +105,7 @@ class FavoriteProvider extends ChangeNotifier {
           onSuccess: () {
             _favorite.removeWhere((item) => item.id == productId);
             _filterFavorite = _favorite;
-            successSnackBar("Product removed successfullt", context);
+            successSnackBar("Product removed successfully", context);
             notifyListeners();
           },
         );

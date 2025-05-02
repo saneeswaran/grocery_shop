@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_shop/constants/constants.dart';
 import 'package:grocery_shop/screens/all%20category/provider/category_provider.dart';
+import 'package:grocery_shop/screens/home%20page/provider/subcategory_provider.dart';
 import 'package:provider/provider.dart';
 
 class AllCategory extends StatefulWidget {
@@ -20,6 +22,14 @@ class _AllCategoryState extends State<AllCategory> {
       context,
       listen: false,
     ).fetchAllCategory(context: context);
+    Provider.of<SubcategoryProvider>(
+      context,
+      listen: false,
+    ).fetchSubcategoryByCategoryId(
+      context: context,
+      categoryId: selectedIndex.toString(),
+    );
+    print(selectedIndex);
   }
 
   @override
@@ -70,7 +80,7 @@ class _AllCategoryState extends State<AllCategory> {
                             shape: BoxShape.circle,
                             image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: NetworkImage(category.image),
+                              image: CachedNetworkImageProvider(category.image),
                             ),
                           ),
                         ),

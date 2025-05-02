@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_shop/constants/constants.dart';
 
@@ -38,7 +39,7 @@ class DailyNeeds extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Colors.grey.shade200),
                     image: const DecorationImage(
-                      image: NetworkImage(
+                      image: CachedNetworkImageProvider(
                         'https://organicmandya.com/cdn/shop/files/Apples_bf998dd2-0ee8-4880-9726-0723c6fbcff3.jpg?v=1721368465&width=1000',
                       ),
                       fit: BoxFit.cover,

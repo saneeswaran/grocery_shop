@@ -33,11 +33,6 @@ class _LoginPageState extends State<LoginPage> {
       email: emailController.text,
       password: passwordController.text,
     );
-    final pref = await SharedPreferences.getInstance();
-    final userId = pref.getString('userId');
-    log(userId.toString());
-    log(isSuccess.toString());
-
     if (mounted) {
       if (isSuccess) {
         moveToNextPageWithReplace(context, const BottomNaviBar());
