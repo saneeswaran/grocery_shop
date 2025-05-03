@@ -25,18 +25,19 @@ class _LoginPageState extends State<LoginPage> {
 
   void loginUser() async {
     final provider = Provider.of<RegisterProvider>(context, listen: false);
-    bool isSuccess = await provider.loginUser(
+    final bool isSuccess = await provider.loginUser(
       context: context,
       email: emailController.text,
       password: passwordController.text,
     );
-    if (mounted) {
-      if (isSuccess) {
+    if (isSuccess) {
+      if (context.mounted) {
+        successSnackBar("Login successfully", context);
         moveToNextPageWithReplace(context, const BottomNaviBar());
-      } else {
-        if (context.mounted) {
-          failedSnackBar("Invalid email or password", context);
-        }
+      }
+    } else {
+      if (context.mounted) {
+        successSnackBar("Login failed", context);
       }
     }
   }

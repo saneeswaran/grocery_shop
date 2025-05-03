@@ -51,6 +51,15 @@ class RegisterProvider extends ChangeNotifier {
     return false;
   }
 
+  Future<Map<String, String>> getAuthHeaders() async {
+    final pref = await SharedPreferences.getInstance();
+    final token = pref.getString('token') ?? '';
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+  }
+
   Future<bool> loginUser({
     required BuildContext context,
     required String email,
@@ -68,19 +77,17 @@ class RegisterProvider extends ChangeNotifier {
           response: response,
           onSuccess: () async {
             final pref = await SharedPreferences.getInstance();
-            final userId = jsonDecode(response.body)['user']['id'];
             final token = jsonDecode(response.body)['token'];
+            final userId = jsonDecode(response.body)['user']['id'];
             final username = jsonDecode(response.body)['user']['username'];
             final email = jsonDecode(response.body)['user']['email'];
-            final id = jsonDecode(response.body)['user']['_id'];
-            pref.setString('id', id);
-            pref.setString('username', username);
-            pref.setString('email', email);
-            pref.setString('token', token);
-            pref.setString('userId', userId);
-            if (context.mounted) {
-              successSnackBar("User logged in successfully", context);
-            }
+
+            // Store token and user data in SharedPreferences
+            await pref.setString('userId', userId);
+            await pref.setString('username', username);
+            await pref.setString('email', email);
+            await pref.setString('token', token);
+
             notifyListeners();
           },
         );

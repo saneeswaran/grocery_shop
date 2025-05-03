@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:grocery_shop/constants/constants.dart';
 import 'package:grocery_shop/model/product_model.dart';
 import 'package:grocery_shop/screens/favorite%20page/provider/favorite_provider.dart';
+import 'package:grocery_shop/screens/shopping%20bag/provider/shopping_bag_provider.dart';
 import 'package:grocery_shop/widgets/custom_elevated_button.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +38,7 @@ class ProductDetailsPage extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.all(size.width * 0.02),
+        padding: EdgeInsets.all(size.width * 0.03),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: size.height * 0.01,
@@ -50,9 +51,13 @@ class ProductDetailsPage extends StatelessWidget {
                     productImage
                         .map((item) => CachedNetworkImage(imageUrl: item))
                         .toList(),
-                options: CarouselOptions(enlargeCenterPage: true),
+                options: CarouselOptions(
+                  enlargeCenterPage: true,
+                  aspectRatio: 1.2,
+                ),
               ),
             ),
+            SizedBox(height: size.height * 0.02),
             _listOfImages(size),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -96,28 +101,75 @@ class ProductDetailsPage extends StatelessWidget {
             Row(
               spacing: size.width * 0.01,
               children: [
+                const Text(
+                  "Rating: ",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const Icon(Icons.star, color: Colors.yellow, size: 20),
                 Text(productRating),
               ],
             ),
-            Text(
-              productQuantity,
-              style: TextStyle(color: Colors.grey.shade500),
+
+            Row(
+              children: [
+                const Text(
+                  "Quantity: ",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  productQuantity,
+                  style: TextStyle(
+                    color: Colors.grey.shade500,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
             Text(
               productPrice,
               style: const TextStyle(
                 color: mainColor,
                 fontWeight: FontWeight.bold,
-                fontSize: 24,
+                fontSize: 30,
               ),
             ),
+            Text(
+              productDescription,
+              maxLines: 5,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 18),
+            ),
+            SizedBox(height: size.height * 0.02),
             SizedBox(
               height: size.height * 0.08,
               width: size.width * 1,
-              child: CustomElevatedButton(
-                onPressed: () {},
-                text: "Add to cart",
+              child: Consumer<ShoppingBagProvider>(
+                builder: (context, value, child) {
+                  final bool isInBag = value.cart.any(
+                    (item) => item.id == productId,
+                  );
+                  return isInBag
+                      ? _alreadyInBagButton()
+                      : CustomElevatedButton(
+                        onPressed: () {
+                          value.addToCart(
+                            context: context,
+                            productId: productId,
+                            product: productModel,
+                          );
+                        },
+                        text: "Add to cart",
+                      );
+                },
               ),
             ),
           ],
@@ -150,6 +202,25 @@ class ProductDetailsPage extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _alreadyInBagButton() {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.grey,
+        side: BorderSide(color: Colors.grey.shade300),
+      ),
+
+      onPressed: null,
+      child: const Text(
+        "Already in bag",
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ),
       ),
     );
   }

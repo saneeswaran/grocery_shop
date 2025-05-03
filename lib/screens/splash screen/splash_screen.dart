@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_shop/screens/bottom%20nav%20bar/bottom_navi_bar.dart';
 import 'package:grocery_shop/screens/login%20screen/login_page.dart';
+import 'package:grocery_shop/util/util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,23 +19,18 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void moveToOtherPage() async {
-    if (context.mounted) {
-      final pref = await SharedPreferences.getInstance();
-      final token = pref.getString('token');
-      if (token == null) {
-        if (mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const LoginPage()),
-          );
-        }
-      } else {
-        if (mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const BottomNaviBar()),
-          );
-        }
+    final pref = await SharedPreferences.getInstance();
+    final token = pref.getString('token');
+    if (token == null) {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+        );
+      }
+    } else {
+      if (mounted) {
+        moveToNextPageWithReplace(context, const BottomNaviBar());
       }
     }
   }

@@ -68,7 +68,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                     context: context,
                     username: userNameController.text,
                     email: emailController.text,
-                    currentPassword: '',
+                    currentPassword: 'superman',
                   );
 
                   if (context.mounted) {

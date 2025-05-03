@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_shop/screens/favorite%20page/favorite_page.dart';
+import 'package:grocery_shop/screens/my%20order/my_order_page.dart';
 import 'package:grocery_shop/screens/profile%20page/profile_page.dart';
 import 'package:grocery_shop/screens/shopping%20bag/shopping_bag.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
@@ -15,23 +16,23 @@ class BottomNaviBar extends StatefulWidget {
 
 List<String> bottomNavBarTitle = const [
   "Home",
-  "Shop",
   "Bag",
   "Favourite",
+  "My Orders",
   "Profile",
 ];
 List<Widget> bottomNavBarPages = [
   const HomePage(),
-  const FavoritePage(),
   const ShoppingBag(),
   const FavoritePage(),
+  const MyOrderPage(),
   const ProfilePage(),
 ];
 List<Icon> bottomNavBaricons = const [
   Icon(Icons.home),
-  Icon(Icons.shopping_cart),
   Icon(Icons.shopping_bag),
   Icon(Icons.favorite),
+  Icon(Icons.history),
   Icon(Icons.person),
 ];
 
