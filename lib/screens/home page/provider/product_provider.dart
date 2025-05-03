@@ -58,14 +58,17 @@ class ProductProvider extends ChangeNotifier {
     return _filterProducts;
   }
 
-  // Future<List<ProductModel>> filterProductBySubcategoryId({
-  //   required String subcategoryId,
-  // }) async {
-  //   _filterProductsBySubcategoryId =
-  //       _products.where((item) => item.subCategoryId == subcategoryId).toList();
-  //   notifyListeners();
-  //   return _filterProductsBySubcategoryId;
-  // }
+  void filterProductBySubcategoryId({required String subcategoryId}) {
+    _filterProductsBySubcategoryId =
+        _products.where((item) => item.subCategoryId == subcategoryId).toList();
+    notifyListeners();
+  }
+
+  void filterProductByCategoryId({required String categoryId}) {
+    _filterProductsBySubcategoryId =
+        _products.where((item) => item.categoryId == categoryId).toList();
+    notifyListeners();
+  }
 
   Future<List<ProductModel>> getAllProductsByCategory({
     required BuildContext context,
@@ -95,35 +98,5 @@ class ProductProvider extends ChangeNotifier {
       }
     }
     return _getAllProductByCategory;
-  }
-
-  Future<List<ProductModel>> getProductsBySubcategory({
-    required BuildContext context,
-    required String subcategory,
-  }) async {
-    try {
-      final response = await http.get(
-        Uri.parse('$getProductsBySubcategoryRoute?subcategory=$subcategory'),
-        headers: headers,
-      );
-      if (context.mounted) {
-        httpErrorHandling(
-          context: context,
-          response: response,
-          onSuccess: () {
-            final List<dynamic> decoded = jsonDecode(response.body);
-            _filterProductsBySubcategoryId =
-                decoded.map((json) => ProductModel.fromMap(json)).toList();
-            notifyListeners();
-          },
-        );
-      }
-    } catch (e) {
-      if (context.mounted) {
-        showHttpError(context: context, e: e);
-      }
-    }
-
-    return _filterProductsBySubcategoryId;
   }
 }

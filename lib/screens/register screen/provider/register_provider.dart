@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:grocery_shop/constants/constants.dart';
 import 'package:grocery_shop/util/util.dart';
@@ -71,6 +70,12 @@ class RegisterProvider extends ChangeNotifier {
             final pref = await SharedPreferences.getInstance();
             final userId = jsonDecode(response.body)['user']['id'];
             final token = jsonDecode(response.body)['token'];
+            final username = jsonDecode(response.body)['user']['username'];
+            final email = jsonDecode(response.body)['user']['email'];
+            final id = jsonDecode(response.body)['user']['_id'];
+            pref.setString('id', id);
+            pref.setString('username', username);
+            pref.setString('email', email);
             pref.setString('token', token);
             pref.setString('userId', userId);
             if (context.mounted) {

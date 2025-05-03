@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:grocery_shop/screens/bottom%20nav%20bar/bottom_navi_bar.dart';
@@ -8,7 +6,6 @@ import 'package:grocery_shop/util/util.dart';
 import 'package:grocery_shop/widgets/custom_snack_bar.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants/constants.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart';

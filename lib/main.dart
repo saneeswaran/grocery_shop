@@ -4,6 +4,7 @@ import 'package:grocery_shop/screens/all%20category/provider/category_provider.d
 import 'package:grocery_shop/screens/favorite%20page/provider/favorite_provider.dart';
 import 'package:grocery_shop/screens/home%20page/provider/product_provider.dart';
 import 'package:grocery_shop/screens/home%20page/provider/subcategory_provider.dart';
+import 'package:grocery_shop/screens/profile%20page/provider/profile_provider.dart';
 import 'package:grocery_shop/screens/register%20screen/provider/register_provider.dart';
 import 'package:grocery_shop/screens/shopping%20bag/provider/shopping_bag_provider.dart';
 import 'package:grocery_shop/screens/splash%20screen/splash_screen.dart';
@@ -19,6 +20,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => ShoppingBagProvider()),
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
         ChangeNotifierProvider(create: (_) => SubcategoryProvider()),
+        ChangeNotifierProvider(create: (_) => ProfileProvider()),
       ],
       child: const MyApp(),
     ),

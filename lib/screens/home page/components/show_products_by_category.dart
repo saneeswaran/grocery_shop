@@ -38,12 +38,6 @@ class _ShowProductsByCategoryState extends State<ShowProductsByCategory> {
       context: context,
       category: widget.category,
     );
-    productProvider.getProductsBySubcategory(
-      context: context,
-      subcategory: selectedSubcategoryName ?? "",
-    );
-
-    setState(() {});
   }
 
   @override
@@ -125,13 +119,13 @@ class _ShowProductsByCategoryState extends State<ShowProductsByCategory> {
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       backgroundColor:
-                          selectedSubcategoryName == subcategory.name
+                          selectedSubcategoryName == subcategory.id
                               ? const Color.fromARGB(255, 109, 191, 168)
                               : Colors.white,
                       side: BorderSide(
                         color: mainColor,
                         width:
-                            selectedSubcategoryName == subcategory.name ? 2 : 1,
+                            selectedSubcategoryName == subcategory.id ? 2 : 1,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -139,13 +133,12 @@ class _ShowProductsByCategoryState extends State<ShowProductsByCategory> {
                     ),
                     onPressed: () {
                       setState(() {
-                        selectedSubcategoryName = subcategory.name;
+                        selectedSubcategoryName = subcategory.id;
                         Provider.of<ProductProvider>(
                           context,
                           listen: false,
-                        ).getProductsBySubcategory(
-                          context: context,
-                          subcategory: subcategory.name,
+                        ).filterProductBySubcategoryId(
+                          subcategoryId: subcategory.id!,
                         );
                       });
                     },
@@ -153,7 +146,7 @@ class _ShowProductsByCategoryState extends State<ShowProductsByCategory> {
                       subcategory.name,
                       style: TextStyle(
                         color:
-                            selectedSubcategoryName == subcategory.name
+                            selectedSubcategoryName == subcategory.id
                                 ? Colors.white
                                 : Colors.black,
                       ),

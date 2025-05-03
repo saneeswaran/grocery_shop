@@ -2,7 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_shop/constants/constants.dart';
 import 'package:grocery_shop/screens/all%20category/provider/category_provider.dart';
+import 'package:grocery_shop/screens/home%20page/components/show_products_by_category.dart';
+import 'package:grocery_shop/screens/home%20page/provider/product_provider.dart';
 import 'package:grocery_shop/screens/home%20page/provider/subcategory_provider.dart';
+import 'package:grocery_shop/util/util.dart';
 import 'package:provider/provider.dart';
 
 class AllCategory extends StatefulWidget {
@@ -13,6 +16,7 @@ class AllCategory extends StatefulWidget {
 }
 
 class _AllCategoryState extends State<AllCategory> {
+  String? selectedCategory;
   int selectedIndex = 0;
 
   @override
@@ -22,14 +26,6 @@ class _AllCategoryState extends State<AllCategory> {
       context,
       listen: false,
     ).fetchAllCategory(context: context);
-    Provider.of<SubcategoryProvider>(
-      context,
-      listen: false,
-    ).fetchSubcategoryByCategoryId(
-      context: context,
-      categoryId: selectedIndex.toString(),
-    );
-    print(selectedIndex);
   }
 
   @override
@@ -55,7 +51,16 @@ class _AllCategoryState extends State<AllCategory> {
                   onTap: () {
                     setState(() {
                       selectedIndex = index;
+                      selectedCategory = category.id; // Set selected category
                     });
+                    // Fetch subcategories based on selected category
+                    Provider.of<SubcategoryProvider>(
+                      context,
+                      listen: false,
+                    ).fetchSubcategoryByCategoryId(
+                      context: context,
+                      categoryId: category.id,
+                    );
                   },
                   child: Container(
                     margin: EdgeInsets.symmetric(
@@ -101,18 +106,17 @@ class _AllCategoryState extends State<AllCategory> {
               },
             ),
           ),
-          // Right Content
+          // Right Content (Subcategory and Products)
           Expanded(
             child: Container(
               padding: EdgeInsets.all(size.width * 0.04),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _subcategoryTile(context, "All"),
-                  SizedBox(height: size.height * 0.02),
-                  _subcategoryTile(context, "Fruits"),
-                  SizedBox(height: size.height * 0.02),
-                  _subcategoryTile(context, "Vegetables"),
+                  _subcategoryTile(
+                    context: context,
+                    title: selectedCategory ?? '',
+                  ),
                 ],
               ),
             ),
@@ -122,15 +126,63 @@ class _AllCategoryState extends State<AllCategory> {
     );
   }
 
-  Widget _subcategoryTile(BuildContext context, String title) {
+  Widget _subcategoryTile({
+    required BuildContext context,
+    required String title,
+  }) {
     final Size size = MediaQuery.of(context).size;
 
-    return Row(
-      children: [
-        Text(title, style: TextStyle(fontSize: size.width * 0.045)),
-        const Spacer(),
-        const Icon(Icons.arrow_forward_ios, size: 16),
-      ],
+    return SizedBox(
+      height: size.height * 0.9,
+      width: size.width * 0.7,
+      child: Consumer<SubcategoryProvider>(
+        builder: (context, value, child) {
+          final sub = value.subcategory;
+
+          if (selectedCategory != title) return const SizedBox();
+
+          return ListView.builder(
+            itemCount: sub.length + 1, // +1 for "All"
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                return ListTile(
+                  title: const Text(
+                    'All',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: mainColor,
+                    ),
+                  ),
+                  onTap: () {
+                    moveToPage(
+                      context,
+                      ShowProductsByCategory(category: title),
+                    );
+                    Provider.of<ProductProvider>(
+                      context,
+                      listen: false,
+                    ).filterProductByCategoryId(categoryId: title);
+                  },
+                );
+              }
+
+              final subcategory = sub[index - 1];
+              return ListTile(
+                title: Text(subcategory.name),
+                onTap: () {
+                  moveToPage(context, ShowProductsByCategory(category: title));
+                  Provider.of<ProductProvider>(
+                    context,
+                    listen: false,
+                  ).filterProductBySubcategoryId(
+                    subcategoryId: subcategory.id.toString(),
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

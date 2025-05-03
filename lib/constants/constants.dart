@@ -89,6 +89,9 @@ const String addToCartRoute = '$mainUrl/cart/add-to-cart';
 const String deleteFromCartRoute = '$mainUrl/cart/delete-from-cart';
 const String getUserCartProductRoute = '$mainUrl/cart/get-user-cart-product';
 
+//profile
+const String updateProfileRoute = '$mainUrl/user/update-user';
+
 //header
 Map<String, String> headers = {'Content-Type': 'application/json'};
 

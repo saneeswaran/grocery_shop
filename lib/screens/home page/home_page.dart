@@ -129,9 +129,9 @@ class _HomePageState extends State<HomePage> {
       height: size.height * 0.32,
       width: size.width,
       child: GridView.builder(
-        itemCount: provider.category.length,
+        itemCount: 6,
         scrollDirection: Axis.horizontal,
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
         ),
@@ -147,6 +147,10 @@ class _HomePageState extends State<HomePage> {
   Widget _categoryContainer({required Size size, required int index}) {
     return Consumer<CategoryProvider>(
       builder: (context, value, child) {
+        if (index >= value.category.length) {
+          return const SizedBox(); // or show a placeholder
+        }
+
         final category = value.category[index];
         return Column(
           children: [

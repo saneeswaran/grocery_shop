@@ -1,12 +1,9 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_shop/constants/constants.dart';
 import 'package:grocery_shop/screens/shopping%20bag/provider/shopping_bag_provider.dart';
 import 'package:grocery_shop/widgets/custom_elevated_button.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ShoppingBag extends StatefulWidget {
   const ShoppingBag({super.key});
@@ -212,13 +209,7 @@ class _ShoppingBagState extends State<ShoppingBag> {
               ),
               //Delivery Option
               _costSummary(size: size),
-              _elevatedButton(
-                size: size,
-                onPressed: () async {
-                  final pref = await SharedPreferences.getInstance();
-                  final userId = pref.getString('userId');
-                },
-              ),
+              _elevatedButton(size: size, onPressed: () async {}),
             ],
           ),
         ),
